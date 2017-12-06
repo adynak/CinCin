@@ -14,10 +14,10 @@
 	$data = json_decode(file_get_contents("php://input"));
 	$dbSchema = $data->securityInfo->schema;
 	$dbPass   = $data->securityInfo->dbPass;
+	$pgPort   = $data->securityInfo->pgPort;
 
-	$conn_string = "host=127.0.0.1 port=5432 dbname=postgres user=postgres password=$dbPass";
+	$conn_string = "host=127.0.0.1 port=$pgPort dbname=postgres user=postgres password=$dbPass";
 	$conn = pg_connect($conn_string);
-
 
 	if ($data->task == 'removeItem') {
 		$debug = false;

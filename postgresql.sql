@@ -778,3 +778,10 @@ SELECT pg_catalog.setval('draanks.recipes_id_seq', 58, true);
 --
 -- PostgreSQL database dump complete
 --
+
+CREATE AGGREGATE textcat_all(
+  basetype    = text,
+  sfunc       = textcat,
+  stype       = text,
+  initcond    = ''
+);

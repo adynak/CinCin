@@ -6,6 +6,7 @@ draanks.factory("Data", ['$http', '$q', '$rootScope',
             securityInfo : {
                 schema: null,
                 dbPass: null,
+                pgPort: null,
                 stop: true
             }
         };
@@ -45,14 +46,16 @@ draanks.factory("Data", ['$http', '$q', '$rootScope',
         var setSecurityInfo = function(securityInfo){
             localStorage.setItem('goofyLuvin', securityInfo.schema);
             localStorage.setItem('raininspain', securityInfo.dbPass);
+            localStorage.setItem('misoandgrace', securityInfo.pgPort);            
             factoryVariables.securityInfo = securityInfo;
         }
 
         var getSecurityInfo = function(){
-            if (factoryVariables.securityInfo.schema == null || factoryVariables.securityInfo.dbPass == null){
+            if (factoryVariables.securityInfo.schema == null || factoryVariables.securityInfo.dbPass == null || factoryVariables.securityInfo.pgPort == null){
                 factoryVariables.securityInfo.schema = localStorage.getItem('goofyLuvin');
                 factoryVariables.securityInfo.dbPass = localStorage.getItem('raininspain');
-                if (factoryVariables.securityInfo.schema !== null || factoryVariables.securityInfo.dbPass !== null){
+                factoryVariables.securityInfo.pgPort = localStorage.getItem('misoandgrace');
+                if (factoryVariables.securityInfo.schema !== null && factoryVariables.securityInfo.dbPass !== null && factoryVariables.securityInfo.pgPort !== null){
                     factoryVariables.securityInfo.stop = false;
                 }
             }

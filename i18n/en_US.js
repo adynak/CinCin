@@ -139,9 +139,11 @@ var txtSecurity = {
     required: true,
     schema: 'Schema Name',
     dbPass: 'Database Password',
+    pgPort: 'Database Listen Port',
     btnSubmit: 'Save',
     errSchemaRequired: 'Scnema Name is Required',
     errDbPassRequired: 'Database Password is Requried',
-    saveSecurity: 'Schema and Database Password Saved.',
+    errPgPortRequired: 'Database Listen Port is Requried',    
+    saveSecurity: 'Database Configuration Saved.',
     saveSecurityFailed: "That Didn't Work.  Try Again or Close This WebPage."
 };

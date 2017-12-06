@@ -31,6 +31,19 @@
                       myform.dbPass.$touched">{{prompts.errdDbPassRequired}}</p> 
         </div>
 
+        <div class="form-group">
+          <label for="pgPort" class="passwordHelp">{{prompts.pgPort}}</label>
+          <input class="form-control" 
+                 type="text" 
+                 name="pgPort" 
+                 placeholder="{{prompts.pgPort}}" 
+                 ng-model="security.pgPort" 
+                 ng-required="{{prompts.required}}">
+          <p class="text-danger"
+             ng-show="myform.pgPort.$invalid && 
+                      myform.pgPort.$touched">{{prompts.errPgPortRequired}}</p> 
+        </div>
+        
         <button type="submit" 
                 class="btn btn-lg btn-primary btn-block" 
                 ng-disabled="myform.$invalid">{{prompts.btnSubmit}}

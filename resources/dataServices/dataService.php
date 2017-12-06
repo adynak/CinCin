@@ -1,5 +1,5 @@
 <?php
-$fp = fopen('../../test.txt','a+');
+$fp = fopen('test.txt','a+');
 $debug = false ;
 
 session_start();
@@ -7,8 +7,9 @@ $data = json_decode(file_get_contents("php://input"));
 
 $dbSchema = $data->securityInfo->schema;
 $dbPass   = $data->securityInfo->dbPass;
+$pgPort   = $data->securityInfo->pgPort;
 
-$conn_string = "host=127.0.0.1 port=5432 dbname=postgres user=postgres password=$dbPass";
+$conn_string = "host=127.0.0.1 port=$pgPort dbname=postgres user=postgres password=$dbPass";
 $conn = pg_connect($conn_string);
 
 if ($data->task == 'validate') {
@@ -24,8 +25,9 @@ if ($data->task == 'validate') {
 
   $result = pg_query($conn, $sql);
   $row_cnt = pg_num_rows($result);
-  if ($row_cnt == 1) { 
-    $member = json_decode(pg_fetch_row($result)[0]);
+  if ($row_cnt == 1) {
+    $row = pg_fetch_row($result);
+    $member = json_decode($row[0]);
     $myArray['validated'] = 'success';
     $myArray['member'] = $member;
     echo json_encode($myArray);
@@ -102,13 +104,6 @@ else if ($data->task == 'getCocktails') {
     $myArray = array();
     if(isset($_SESSION["currentuser"]))
     {
-
-// --CREATE AGGREGATE textcat_all(
-// --  basetype    = text,
-// --  sfunc       = textcat,
-// --  stype       = text,
-// --  initcond    = ''
-// --);
 
       $sql  = "SELECT  ";
       $sql .= "  $dbSchema.recipe.name as cocktail, ";
@@ -393,7 +388,7 @@ if ($debug) {
   fwrite($fp , "\n");
   fwrite($fp , 'sql = ' . $sql);
   fwrite($fp , "\n");
-  fwrite($fp, "results = " . print_r($results,1));
+  fwrite($fp, "row = " . print_r($row,1));
   fwrite($fp , "\n");
   //   fwrite($fp , 'sequence = ' . print_r($sequence,1));
   // fwrite($fp , "\n");
