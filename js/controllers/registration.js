@@ -8,8 +8,7 @@ draanks.controller('RegistrationController', ['$scope', '$http', '$location', 'D
         
         $scope.login = function() {
             member = $scope.member;
-            // if (typeof(member) == 'undefined') member = {email:'guest',password:'guest',onlineID:'guest'};
-            if (typeof(member) == 'undefined') member = {email:'adynak@gmail.com',password:'adynak',onlineID:'adynak'};
+            if (typeof(member) == 'undefined') member = {email:'guest',password:'guest',onlineID:'guest'};
 
             Data.validateCredentials(member).then(function(status) {
                 if (status.validated == 'success') {
