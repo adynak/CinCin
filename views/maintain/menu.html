@@ -1,0 +1,41 @@
+<nav class="navbar navbar-default sidebar" role="navigation">
+  <div class="container-fluid">
+    <div class="collapse navbar-collapse" id="bs-sidebar-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+
+        <li class="active">
+          <a href="#/success">{{prompts.menuHome}}
+            <span style="font-size:16px;" 
+                class="pull-right hidden-xs showopacity glyphicon glyphicon-glass">
+            </span>
+          </a>
+        </li>
+
+        <li ng-if="member.member_type == 1">
+          <a href="#/maintain/category">{{prompts.menuCategory}}
+            <span style="font-size:16px;"
+                  class="pull-right hidden-xs showopacity glyphicon glyphicon-duplicate icon-green">
+            </span>
+          </a>
+        </li>        
+
+        <li ng-if="member.member_type == 1">
+          <a href="#/maintain/ingredient">{{prompts.menuIngredient}}
+            <span style="font-size:16px;"
+                  class="pull-right hidden-xs showopacity glyphicon glyphicon-tint icon-blue">
+            </span>
+          </a>
+        </li>
+
+        <li ng-if="member.member_type == 1">
+          <a href="#/maintain/measure">{{prompts.menuMeasure}}
+            <span style="font-size:16px;"
+                  class="pull-right hidden-xs showopacity glyphicon glyphicon-scale icon-cart">
+            </span>
+          </a>
+        </li>
+
+      </ul>
+    </div>
+  </div>
+</nav>
