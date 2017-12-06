@@ -1,0 +1,155 @@
+<div class="row">
+  <div class="col-md-8 col-md-offset-2">
+    <form class="alert maint-background" name="recipeForm" ng-submit="sendRecipe()" novalidate>
+      <h4 class="alert alert-info">{{ prompts.pageTitle }}</h4>
+      <p class="text-danger" ng-show="invalidmessage">{{invalidmessage}}</p>
+
+      <div class="clearfix"></div>
+
+      <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4 required">
+        <label for="inputRecipeName" ng-class="applyThisClass(member)">{{prompts.recipeName}}</label>
+        <input class="form-control" 
+               type="text" 
+               name="recipeName" 
+               placeholder="{{prompts.recipeNamePlaceholder}}"
+               ng-model="recipe.recipeName" 
+               ng-required="true">
+        <p class="text-danger"
+           ng-show="profileForm.recipeName.$invalid && 
+                    profileForm.recipeName.$touched">{{prompts.errRecipeName}}</p>
+      </div>
+
+      <div class="form-group col-xs-10 col-sm-3 col-md-3 col-lg-3 required">
+        <label for="category" ng-class="applyThisClass(member)">{{prompts.category}}</label>
+        <br>
+        <select data-ng-model="recipe.category"
+                ng-required="true"
+                name="category"
+                data-ng-options="(item.name) for item in categories">
+          <option value="">{{ prompts.categoryPlaceholder }}</option>
+        </select>
+      </div>
+
+      <div class="form-group col-xs-10 col-sm-3 col-md-3 col-lg-3 required">
+        <label for="tasteProfile" ng-class="applyThisClass(member)">{{prompts.tasteProfile}}</label>
+        <br>
+        <select data-ng-model="recipe.tasteProfile"
+                ng-required="true"
+                name="tasteProfile"
+                data-ng-options="(item.name) for item in ingredients">
+          <option value="">{{ prompts.tasteProfilePlaceholder }}</option>
+        </select>
+      </div>
+
+      <div class="form-group col-xs-10 col-sm-2 col-md-2 col-lg-2 required">
+        <label for="serves" ng-class="applyThisClass(member)">{{prompts.serves}}</label>
+        <br>
+          <select data-ng-model="recipe.serves"
+                  ng-required="true"
+                  name="serves"
+                  data-ng-options="(item.name) for item in serves">
+            <option value="">{{ prompts.servesPlaceholder }}</option>
+          </select>
+          <p class="text-danger" 
+             ng-show="recipeForm.recipient.$invalid && recipeForm.recipient.$touched">recipient required</p>
+      </div>
+
+      <div class="clearfix"></div>
+
+      <fieldset class="field_set">
+        <!-- <legend>{{prompts.whatsInIt}}</legend> -->
+
+        <div class="form-group col-xs-10 col-sm-3 col-md-3 col-lg-3 required">
+          <label for="inputAmount" ng-class="applyThisClass(member)">{{prompts.amount}}</label>
+          <input class="form-input" 
+                 type='number' 
+                 ng-model='recipe.amount' 
+                 name='number' 
+                 placeholder="{{prompts.amountPlaceholder}}"                   
+                 sb-precision='{{config.sbPrecision}}' 
+                 sb-min='{{config.sbMin}}' 
+                 sb-max='{{config.sbMax}}' 
+                 sb-max-precision='{{config.sbMaxPrecision}}' 
+                 sb-number />
+          <p class="text-danger"
+             ng-show="recipeForm.number.$touched && 
+                      (recipeForm.number.$error['min-value']     ||
+                       recipeForm.number.$error['max-value']     ||
+                       recipeForm.number.$error['number']        ||
+                       recipeForm.number.$error['max-precision'])" >{{recipeForm.number.$customError}}
+          </p>
+
+        </div>
+
+        <div class="form-group col-xs-10 col-sm-3 col-md-3 col-lg-3 required">
+          <label for="measure" ng-class="applyThisClass(member)">{{prompts.measure}}</label>
+          <br>
+          <select data-ng-model="recipe.measure"
+                  ng-required="true"
+                  name="measure"
+                  data-ng-options="(item.name) for item in measures | filter: {plural:usePlurals }">
+            <option value="">{{ prompts.measurePlaceholder }}</option>
+          </select>
+        </div>
+
+        <div class="form-group col-xs-10 col-sm-3 col-md-3 col-lg-3 required">
+          <label for="ingredient" ng-class="applyThisClass(member)">{{prompts.ingredient}}</label>
+          <br>
+            <select data-ng-model="recipe.ingredient"
+                    ng-required="true"
+                    name="ingredient"
+                    data-ng-options="(item.name) for item in ingredients">
+              <option value="">{{ prompts.ingredientPlaceholder }}</option>
+            </select>
+            <p class="text-danger" 
+               ng-show="recipeForm.recipient.$invalid && recipeForm.recipient.$touched">ingredient required</p>
+        </div>
+
+        <div class="btnAdd col-xs-10 col-sm-3 col-md-3 col-lg-3">
+          <button class="btn btn-lg btn-primary btn-block" 
+            type="button" 
+            ng-click="addIngredient();"
+            ng-disabled="recipeForm.$invalid">{{prompts.btnAddIngredient}}
+          </button>
+        </div>
+
+      </fieldset>
+
+      <br>
+      <br>
+
+      <div ng-hide="!allowNext" class="fieldset">
+        <h1>
+          <span>{{recipe.recipeName}} {{prompts.ingredients}}</span>
+        </h1>
+        <div ng-repeat="(listName, list) in lists">
+          <ul class="ingredientList" 
+              dnd-list="list" 
+              dnd-drop="dropCallback(item, type, listName)">
+            <li ng-repeat="item in list"
+                dnd-draggable="item"
+                dnd-type="listName"
+                dnd-moved="list.splice($index, 1)"
+                dnd-effect-allowed="move">
+                <span ng-click="removeItem($index)" 
+                      style="cursor:pointer;" 
+                      class="glyphicon glyphicon-remove-sign icon-danger">
+                </span>
+                &nbsp;&nbsp;{{item.label}}
+            </li>
+          </ul>
+        </div>
+      </div>
+      <br>
+
+      <button class="btn btn-lg btn-primary btn-block" 
+              type="submit" 
+              ng-disabled="!allowNext">{{prompts.btnNext}}
+      </button>
+      <button class="btn btn-lg btn-warning btn-block" 
+              type="button" onclick="window.history.go(-1);">{{prompts.btnCancel}}
+      </button>
+
+    </form>
+  </div>
+</div>

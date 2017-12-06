@@ -1,0 +1,51 @@
+<div class="row">
+  <div class="col-md-8 col-md-offset-2">                
+    <form name="maintainForm" class="alert maint-background" novalidate>
+      <h4 class="alert alert-info">{{ prompts.pageName }}</h4>
+      <p class="text-danger" ng-show="invalidmessage">{{invalidmessage}}</p>
+
+      <div class="clearfix"></div>
+
+      <div style="overflow-y: scroll; height:{{prompts.listHeight}};">
+        <ul class="maintenanceListUnorderedList">
+          <li ng-repeat="item in infoList">
+            <span ng-click="removeItem($index)" 
+                  style="cursor:pointer;" 
+                  class="glyphicon glyphicon-remove-sign icon-danger">
+            </span>
+            {{item.name}}
+          </li>
+        </ul>
+      </div>
+
+      <div class="clearfix"></div>
+
+      <br>
+
+      <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4 required">
+        <label for="inputRecipeName" ng-class="applyThisClass(member)">
+          {{prompts.new}} {{prompts.pageName}}:
+        </label>
+        <input class="form-control" 
+               type="text" 
+               name="category" 
+               placeholder="{{prompts.placeholder}}"
+               ng-model="addMe"
+               ng-required="true">
+      </div>
+
+      <div class="btnAddItem col-xs-10 col-sm-3 col-md-3 col-lg-3">
+        <button class="btn btn-lg btn-primary btn-block" 
+                type="button" 
+                ng-click="addItem();"
+                ng-disabled="maintainForm.$invalid">{{prompts.btnAddItem}}
+        </button>
+      </div>
+
+      <button class="btn btn-lg btn-warning btn-block" 
+              type="button" onclick="window.history.go(-1);">{{prompts.btnCancel}}
+      </button>
+
+    </form>
+  </div>
+</div>

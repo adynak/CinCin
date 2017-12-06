@@ -1,0 +1,58 @@
+<div class="row">
+  <div class="col-md-8 col-md-offset-2">
+    <form name="libraryForm" class="form-signin" ng-submit="btnAction()" novalidate>
+      <h4 class="alert alert-info">{{ prompts.pageTitle }}
+
+        <div class="col-sm-3 col-md-3 pull-right">
+          <div class="input-group-sm moveUp">
+            <!-- <i class="glyphicon glyphicon-search"></i> -->
+            <input type="text" 
+                   class="form-control" 
+                   ng-change="searchDranks()" 
+                   placeholder="{{prompts.searchEmptyText}}"
+                   ng-model="searchText" />
+          </div>
+        </div>
+   
+    </h4>
+
+      <div class="clearfix"></div>
+
+      <div id="draanks"
+           ui-grid="gridOptions" 
+           ui-grid-grouping 
+           class="grid"
+           style="border:0px; height:{{prompts.gridHeight}} !important">
+           <!-- style="border:0px;"> -->
+<!--            <div style="margin-top : {{moveUp}}">
+              <button class="btn btn-lg btn-primary btn-block" 
+                      type="submit">
+                      {{prompts.btnCancel}}
+              </button>
+          </div>
+ -->
+      </div>
+
+
+      <br>
+
+      <div>
+        <modal-dialog show='modalShown' width='400px' txtButtonDone='{{prompts.btnCancel}}'>
+          <h4 class="alert alert-info">{{ selectedRecipeName }} (Serves {{portions}})</h4>
+            <ul>
+              <li class="item" ng-repeat="ingredient in recipe">
+                <strong>{{ ingredient }}</strong>
+              </li>
+            </ul>
+        </modal-dialog>
+      </div>
+
+      <button class="btn btn-lg btn-primary btn-block" 
+              style="position:relative; display: block; top: {{moveUp}};"
+              type="submit">
+              {{prompts.btnCancel}}
+      </button>
+
+    </form>
+  </div>
+</div>

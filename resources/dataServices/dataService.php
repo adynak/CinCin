@@ -1,0 +1,417 @@
+<?php
+$fp = fopen('../../test.txt','a+');
+$debug = false ;
+
+session_start();
+$data = json_decode(file_get_contents("php://input"));
+
+$dbSchema = $data->securityInfo->schema;
+$dbPass   = $data->securityInfo->dbPass;
+
+$conn_string = "host=127.0.0.1 port=5432 dbname=postgres user=postgres password=$dbPass";
+$conn = pg_connect($conn_string);
+
+if ($data->task == 'validate') {
+  $debug = false;
+  $myArray    = array();
+
+  $sql  = "select row_to_json(t) ";
+  $sql .= "from (";
+  $sql .= "select * from $dbSchema.members where ";
+  $sql .= "email='"      . $data->email    . "' and ";
+  $sql .= "password = '" . $data->password . "'";
+  $sql .= ") t";
+
+  $result = pg_query($conn, $sql);
+  $row_cnt = pg_num_rows($result);
+  if ($row_cnt == 1) { 
+    $member = json_decode(pg_fetch_row($result)[0]);
+    $myArray['validated'] = 'success';
+    $myArray['member'] = $member;
+    echo json_encode($myArray);
+    $_SESSION["currentuser"] = $member->onlineid;
+  } else {
+    echo 'The email or password you have entered is invalid.';
+  }
+}
+
+else if ($data->task == 'getsessiondata') {
+  $debug = false ;
+    $myArray = array();
+    if(isset($_SESSION["currentuser"]))
+    {
+      $sql = "SELECT * FROM $dbSchema.members where onlineID='" . $_SESSION["currentuser"] . "'";
+      $result = pg_query($conn, $sql);
+      if (!$result) {
+        echo "Error: " . $sql . '<br>' ;
+      } else {
+        while ($row = pg_fetch_assoc($result)) {
+          $myArray[] = $row;
+        }
+        if (sizeof($myArray) > 0) {
+          $myArray['id'] = 'new';
+        }
+        echo json_encode($myArray);
+      }
+    } else {
+      echo 'nosession';
+    }    
+}
+
+else if ($data->task == 'getMemberInfo') {
+    $myArray = array();
+    if(isset($_SESSION["currentuser"]))
+    {
+      $sql = "SELECT * FROM $dbSchema.members where onlineID != '" . $_SESSION["currentuser"] . "'";
+      $result = pg_query($conn, $sql);
+      if (!$result) {
+        echo "Error: " . $sql . '<br>' ;
+      } else {
+        while ($row = pg_fetch_assoc($result)) {
+          $myArray[] = $row;
+        }
+        echo json_encode($myArray);
+      }
+    } else {
+      echo 'nosession';
+    }    
+}
+
+else if ($data->task == 'getIngredients') {
+  $debug = false;
+    $myArray = array();
+    if(isset($_SESSION["currentuser"]))
+    {
+      $sql = "SELECT * FROM $dbSchema.ingredient order by name";
+      $result = pg_query($conn, $sql);
+      if (!$result) {
+        echo "Error: " . $sql . '<br>' ;
+      } else {
+        while ($row = pg_fetch_assoc($result)) {
+          $myArray[] = $row;
+        }
+        echo json_encode($myArray);
+      }
+    } else {
+      echo 'nosession';
+    }    
+}
+
+else if ($data->task == 'getCocktails') {
+  $debug = false;
+    $myArray = array();
+    if(isset($_SESSION["currentuser"]))
+    {
+
+// --CREATE AGGREGATE textcat_all(
+// --  basetype    = text,
+// --  sfunc       = textcat,
+// --  stype       = text,
+// --  initcond    = ''
+// --);
+
+      $sql  = "SELECT  ";
+      $sql .= "  $dbSchema.recipe.name as cocktail, ";
+      $sql .= "  $dbSchema.category.name as category, ";
+      $sql .= "  textcat_all($dbSchema.recipe.portions || ', ') as portions, ";
+      $sql .= "  textcat_all($dbSchema.recipeingredient.quantity || ', ') as quantity,   ";
+      $sql .= "  textcat_all($dbSchema.measure.name || ', ') as measure, ";
+      $sql .= "  textcat_all($dbSchema.ingredient.name || ', ') as ingredient, ";
+      $sql .= "  textcat_all($dbSchema.recipeingredient.sequence || ', ') as sequence  ";
+      $sql .= "FROM  ";
+      $sql .= "  $dbSchema.recipeingredient, ";
+      $sql .= "  $dbSchema.measure, ";
+      $sql .= "  $dbSchema.ingredient, ";
+      $sql .= "  $dbSchema.recipe, ";
+      $sql .= "  $dbSchema.category ";
+      $sql .= "where ";
+      $sql .= "  $dbSchema.recipeingredient.measureid=$dbSchema.measure.id and ";
+      $sql .= "  $dbSchema.ingredient.id=$dbSchema.recipeingredient.ingredientid and ";
+      $sql .= "  $dbSchema.recipeingredient.recipeid=$dbSchema.recipe.id and ";
+      $sql .= "  $dbSchema.recipe.categoryid=$dbSchema.category.id ";
+      $sql .= "GROUP BY  ";
+      $sql .= "  $dbSchema.category.name, ";
+      $sql .= "  $dbSchema.recipe.name ";
+      $sql .= "order by ";
+      $sql .= "  $dbSchema.category.name, ";
+      $sql .= "  $dbSchema.recipe.name ";
+
+      $result = pg_query($conn, $sql);
+      if (!$result) {
+        echo "Error: " . $sql . '<br>' ;
+      } else {
+        while ($row = pg_fetch_assoc($result)) {
+
+          $quantity   = explode(', ',$row['quantity']);
+          $measure    = explode(', ',$row['measure']);
+          $ingredient = explode(', ',$row['ingredient']);
+          $sequence   = explode(', ',$row['sequence']);
+          $portions   = explode(', ',$row['portions']);
+          $max = count($sequence);
+          unset($sequence[$max-1]);
+          $recipe      = array();
+          $ingredients = array();          
+          $max = count($sequence);
+
+          for ($x = 0 ; $x < $max ; $x++){
+            $step = $quantity[$x] . ' ' . $measure[$x] . ' ' . $ingredient[$x];
+            $recipe[$sequence[$x]] = $step;
+            $ingredients[$sequence[$x]] = $ingredient[$x];
+          }
+
+          $row['portions'] = $portions[0];
+          $row['ingredients'] = $ingredients;
+
+          // $row['recipe'] = array('1 ounce something','2 dashes bitters','3 ice cubes','');
+          $row['recipe'] = $recipe;
+          $myArray[] = $row;
+        }
+        echo json_encode($myArray);
+      }
+    } else {
+      echo 'nosession';
+    }    
+}
+
+else if ($data->task == 'getCategories') {
+  $debug = false;
+    $myArray = array();
+    if(isset($_SESSION["currentuser"]))
+    {
+      $sql = "SELECT * FROM $dbSchema.category order by name";
+      $result = pg_query($conn, $sql);
+      if (!$result) {
+        echo "Error: " . $sql . '<br>' ;
+      } else {
+        while ($row = pg_fetch_assoc($result)) {
+          $myArray[] = $row;
+        }
+        echo json_encode($myArray);
+      }
+    } else {
+      echo 'nosession';
+    }    
+}
+
+else if ($data->task == 'getMeasures') {
+  $debug = false;
+    $myArray = array();
+    if(isset($_SESSION["currentuser"]))
+    {
+      $sql = "SELECT * FROM $dbSchema.measure order by upper(left(name, 1))";
+      $result = pg_query($conn, $sql);
+      if (!$result) {
+        echo "Error: " . $sql . '<br>' ;
+      } else {
+        while ($row = pg_fetch_assoc($result)) {
+          $myArray[] = $row;
+        }
+        echo json_encode($myArray);
+      }
+    } else {
+      echo 'nosession';
+    }    
+}
+
+else if ($data->task == 'register') {
+    $debug = false;
+    $pword_type = 0 ;
+    $member_type = 0 ;
+    $sql = "select count(*) from $dbSchema.members where email='" . $data->userInfo->email . "' or onlineid = '" . $data->userInfo->onlineid . "'";
+    $result = pg_query($conn, $sql);
+    $row_cnt = pg_fetch_row($result);
+
+    if ($row_cnt[0] >= 1) {
+        echo 'onlineID or email already exists';
+    } else {
+        $sql  = "insert into $dbSchema.members (";
+        $sql .= "onlineid, ";
+        $sql .= "name_first, ";
+        $sql .= "name_last, ";
+        if (!is_null($data->userInfo->name_business)){
+          $sql .= "name_business, ";
+        }
+        if (!is_null($data->userInfo->occupation)){
+          $sql .= "occupation, ";
+        }
+        $sql .= "email, ";
+        $sql .= "phone_main, ";
+        if (!is_null($data->userInfo->phone_secondary)){
+          $sql .= "phone_secondary, ";
+        }
+        if (!is_null($data->userInfo->comments)){
+          $sql .= "comments, ";
+        }
+        $sql .= "password,";
+        $sql .= "pword_type,";
+        $sql .= "member_type) values ('";
+
+        $sql .= $data->userInfo->onlineid          . "', '";
+        $sql .= $data->userInfo->name_first        . "', '";        
+        $sql .= $data->userInfo->name_last         . "', '";
+        if (!is_null($data->userInfo->name_business)){        
+          $sql .= $data->userInfo->name_business     . "', '";
+        }
+        if (!is_null($data->userInfo->occupation)){
+          $sql .= $data->userInfo->occupation      . "', '";
+        }
+        $sql .= $data->userInfo->email             . "', '";
+        $sql .= $data->userInfo->phone_main        . "', '";
+        if (!is_null($data->userInfo->phone_secondary)){
+          $sql .= $data->userInfo->phone_secondary . "', '";
+        }
+        if (!is_null($data->userInfo->comments)){
+          $sql .= $data->userInfo->comments        . "', '";
+        }
+        $sql .= $data->userInfo->password          . "', '";
+        $sql .= $pword_type                        . "', '";
+        $sql .= $member_type                       . "'); ";
+
+        // $result = pg_query($conn, $sql);
+        if (1) {
+          echo "Error: " . $sql . "<br>" ;
+        } else {
+          echo 'success';
+        }            
+    }
+}
+
+else if ($data->task == 'logout') {    
+    unset($_SESSION['currentuser']);
+    if(!isset($_SESSION['currentuser'])){
+        echo 'success';
+    } else {
+        echo 'failed to destroy session';
+    }
+}
+
+else if ($data->task == 'addToLibrary') {
+  $debug = false ;
+// create a recipe entry
+  $sql  = 'insert into $dbSchema.recipe (';
+  $sql .= "name, "  ;
+  $sql .= "portions, "  ;  
+  $sql .= "categoryid, "  ;
+  $sql .= "bittersid) "  ;
+  $sql .= "values ('"  ;
+  $sql .= $data->cocktail->name                . "', '"; 
+  $sql .= $data->cocktail->serves->name        . "', '"; 
+  $sql .= $data->cocktail->category->id        . "', '"; 
+  $sql .= $data->cocktail->tasteProfile->id    . "')  ";   
+
+  $result = pg_query($conn, $sql);
+  if (!$result) {
+    $addMsg = "Error: " . $sql . "<br>" ;
+  } else {
+    $addMsg = 'success';
+    $sql = "SELECT max(id) FROM $dbSchema.recipe";
+      $result = pg_query($conn, $sql);
+      if (!$result) {
+        echo "Error: " . $sql . '<br>' ;
+      } else {
+        while ($row = pg_fetch_assoc($result)) {
+          $myArray[] = $row;
+        }
+        $recipeID = $myArray[0][max];
+        $ingredientCount = count($data->cocktail->ingredients);
+        for ($x = 0 ; $x < $ingredientCount ; $x ++)
+        {
+          $sql  = "insert into $dbSchema.recipeingredient (";
+          $sql .= "recipeid, ";
+          $sql .= "ingredientid, ";
+          $sql .= "quantity, ";          
+          $sql .= "measureid, ";
+          $sql .= "sequence) ";
+          $sql .= "values ('"  ;
+          $sql .= $recipeID                                       . "', '"; 
+          $sql .= $data->cocktail->ingredients[$x]->ingredientID  . "', '"; 
+          $sql .= $data->cocktail->ingredients[$x]->amount        . "', '"; 
+          $sql .= $data->cocktail->ingredients[$x]->measureID     . "', '"; 
+          $sql .= $x                                              . "') ;"; 
+
+          $result = pg_query($conn, $sql);
+          if (!$result) {
+            echo "Error: " . $sql . "<br>" ;
+          } else {
+            echo 'success';
+          }      
+
+        }
+      }
+
+
+  }
+
+}
+
+else if ($data->task == 'updateuser') {
+// use !is_null() to avoid inserting null strings into $dbSchema.members for non-required fields
+  $debug = false;
+    if(isset($_SESSION["currentuser"]))
+    {
+        $sql = "select count(*) from $dbSchema.members where email !='" . $data->email . "' and onlineid = '" . $data->username . "'";
+
+        $result = pg_query($conn, $sql);
+        $row_cnt = pg_fetch_row($result);
+
+        if ($row_cnt[0] == 1) { 
+          echo ('usernameexists');
+        } else {
+          $sql  = "update $dbSchema.members set ";
+          $sql .= "name_first = '"      . $data->userInfo->name_first      . "', ";
+          $sql .= "name_last = '"       . $data->userInfo->name_last       . "', ";
+          $sql .= "name_business = '"   . $data->userInfo->name_business   . "', ";
+          if (!is_null($data->userInfo->occupation)){
+            $sql .= "occupation = '"      . $data->userInfo->occupation      . "', ";
+          }
+          $sql .= "email = '"           . $data->userInfo->email           . "', ";
+          $sql .= "phone_main = '"      . $data->userInfo->phone_main      . "', ";
+          if (!is_null($data->userInfo->phone_secondary)){
+            $sql .= "phone_secondary = '" . $data->userInfo->phone_secondary . "', ";
+          }
+          if (!is_null($data->userInfo->comments)){
+            $sql .= "comments = '"        . $data->userInfo->comments        . "', ";
+          }
+          $sql .= "password = '"        . $data->userInfo->password        . "'  ";
+          $sql .= "where id ='"         . $data->userInfo->id              . "'; ";
+          $result = pg_query($conn, $sql);
+          if (!$result) {
+            echo "Error: " . $sql . "<br>" ;
+          } else {
+            echo 'success';
+          }            
+        }
+    } else {
+        echo 'nosession';
+    }
+}
+
+if ($debug) {
+  fwrite($fp , 'task = ' . print_r($data->userInfo,1));
+  fwrite($fp , "\n");
+  fwrite($fp , print_r($member,1));
+  fwrite($fp , "\n");
+  fwrite($fp , 'sql = ' . $sql);
+  fwrite($fp , "\n");
+  fwrite($fp, "results = " . print_r($results,1));
+  fwrite($fp , "\n");
+  //   fwrite($fp , 'sequence = ' . print_r($sequence,1));
+  // fwrite($fp , "\n");
+
+  fwrite($fp , 'session = ' . $_SESSION["currentuser"]);
+  fwrite($fp , "\n");
+  // if (sizeof($myArray) > 0) {
+  //   fwrite($fp , json_encode($myArray));
+  //   fwrite($fp , "\n");
+    fwrite($fp , print_r($myArray,1));
+    fwrite($fp , "\n");
+  //   fwrite($fp , $myArray[0][max]);
+  //   fwrite($fp , "\n");
+  // }
+  fwrite($fp , "\n");
+  // fwrite($fp , print_r($addMsg,1));
+
+  $debug = false ;
+}
+
+?>
