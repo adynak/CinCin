@@ -2,6 +2,9 @@
 <html lang="en" ng-app="draanks" ng-cloak>
   <head>
     <meta charset="UTF-8">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
 
     <title></title>
     <meta name="viewport" content="width=device-width, user-scalable=no">
