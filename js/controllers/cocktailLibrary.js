@@ -82,10 +82,14 @@ draanks.controller('CocktailLibraryController', ['$scope', '$http', '$location',
         });
 
         $scope.showRecipe  = function(row){
-            $scope.selectedRecipeName = row.entity.cocktail;
-            $scope.portions           = row.entity.portions;
-            $scope.recipe             = row.entity.recipe;
-            $scope.modalShown = true;
+            if (typeof(row.entity.cocktail) == 'undefined'){
+                return;
+            } else {
+                $scope.selectedRecipeName = row.entity.cocktail;
+                $scope.portions           = row.entity.portions;
+                $scope.recipe             = row.entity.recipe;
+                $scope.modalShown = true;
+            }
         };
 
         $scope.closeModal = function() {

@@ -1,4 +1,4 @@
-draanks.factory("ListServices", ['$http', '$q', '$rootScope',
+draanks.factory("ListServices", ['$http', '$q', '$rootScope', "Data",
     function($http, $q, $rootScope, Data) {
 
         var removeItemSql = function(infoList,infoListLabel,position){
@@ -20,7 +20,7 @@ draanks.factory("ListServices", ['$http', '$q', '$rootScope',
             return sql;
         }
 
-        var processUpdate = function(infoList, sql, action, newItem,insertPosition){
+        var processUpdate = function(infoList, sql, action, newItem,insertPosition){            
             var qObject = $q.defer();
             var params = {
                 sql: sql,
