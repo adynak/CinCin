@@ -8,6 +8,7 @@ $data = json_decode(file_get_contents("php://input"));
 $dbSchema = $data->securityInfo->schema;
 $dbPass   = $data->securityInfo->dbPass;
 $pgPort   = $data->securityInfo->pgPort;
+$pgPort   = 5433;
 
 $conn_string = "host=127.0.0.1 port=$pgPort dbname=postgres user=postgres password=$dbPass";
 $conn = pg_connect($conn_string);
@@ -112,7 +113,7 @@ else if ($data->task == 'getCocktails') {
       $sql .= "  textcat_all($dbSchema.recipeingredient.quantity || ', ') as quantity,   ";
       $sql .= "  textcat_all($dbSchema.measure.name || ', ') as measure, ";
       $sql .= "  textcat_all($dbSchema.ingredient.name || ', ') as ingredient, ";
-      $sql .= "  textcat_all($dbSchema.recipeingredient.sequence || ', ') as sequence  ";
+      $sql .= "  textcat_all($dbSchema.recipeingredient.mixorder || ', ') as mixorder  ";
       $sql .= "FROM  ";
       $sql .= "  $dbSchema.recipeingredient, ";
       $sql .= "  $dbSchema.measure, ";
@@ -140,18 +141,18 @@ else if ($data->task == 'getCocktails') {
           $quantity   = explode(', ',$row['quantity']);
           $measure    = explode(', ',$row['measure']);
           $ingredient = explode(', ',$row['ingredient']);
-          $sequence   = explode(', ',$row['sequence']);
+          $mixorder   = explode(', ',$row['mixorder']);
           $portions   = explode(', ',$row['portions']);
-          $max = count($sequence);
-          unset($sequence[$max-1]);
+          $max = count($mixorder);
+          unset($mixorder[$max-1]);
           $recipe      = array();
           $ingredients = array();          
-          $max = count($sequence);
+          $max = count($mixorder);
 
           for ($x = 0 ; $x < $max ; $x++){
             $step = $quantity[$x] . ' ' . $measure[$x] . ' ' . $ingredient[$x];
-            $recipe[$sequence[$x]] = $step;
-            $ingredients[$sequence[$x]] = $ingredient[$x];
+            $recipe[$mixorder[$x]] = $step;
+            $ingredients[$mixorder[$x]] = $ingredient[$x];
           }
 
           $row['portions'] = $portions[0];
@@ -316,7 +317,7 @@ else if ($data->task == 'addToLibrary') {
           $sql .= "ingredientid, ";
           $sql .= "quantity, ";          
           $sql .= "measureid, ";
-          $sql .= "sequence) ";
+          $sql .= "mixorder) ";
           $sql .= "values ('"  ;
           $sql .= $recipeID                                       . "', '"; 
           $sql .= $data->cocktail->ingredients[$x]->ingredientID  . "', '"; 
@@ -390,7 +391,7 @@ if ($debug) {
   fwrite($fp , "\n");
   fwrite($fp, "row = " . print_r($row,1));
   fwrite($fp , "\n");
-  //   fwrite($fp , 'sequence = ' . print_r($sequence,1));
+  //   fwrite($fp , 'mixorder = ' . print_r($mixorder,1));
   // fwrite($fp , "\n");
 
   fwrite($fp , 'session = ' . $_SESSION["currentuser"]);

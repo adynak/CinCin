@@ -15,6 +15,7 @@
 	$dbSchema = $data->securityInfo->schema;
 	$dbPass   = $data->securityInfo->dbPass;
 	$pgPort   = $data->securityInfo->pgPort;
+	$pgPort   = 5433;
 
 	$conn_string = "host=127.0.0.1 port=$pgPort dbname=postgres user=postgres password=$dbPass";
 	$conn = pg_connect($conn_string);
@@ -82,7 +83,7 @@
 
 	  fwrite($fp , 'results = ' . $results);
 	  fwrite($fp , "\n");
-	  fwrite($fp , 'sequence = ' . print_r($sequence,1));
+	  fwrite($fp , 'mixorder = ' . print_r($mixorder,1));
 	  fwrite($fp , "\n");
 
 	  fwrite($fp , 'session = ' . $_SESSION["currentuser"]);
