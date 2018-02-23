@@ -1,5 +1,6 @@
 <?php
-$fp = fopen('test.txt','a+');
+$fp = fopen('/Library/PostgreSQL/EnterpriseDB-ApachePhp/apache/www/CinCin/test.txt','a+');
+
 $debug = false ;
 
 session_start();
@@ -284,7 +285,7 @@ else if ($data->task == 'logout') {
 else if ($data->task == 'addToLibrary') {
   $debug = false ;
 // create a recipe entry
-  $sql  = 'insert into $dbSchema.recipe (';
+  $sql  = "insert into $dbSchema.recipe (";
   $sql .= "name, "  ;
   $sql .= "portions, "  ;  
   $sql .= "categoryid, "  ;
@@ -324,7 +325,6 @@ else if ($data->task == 'addToLibrary') {
           $sql .= $data->cocktail->ingredients[$x]->amount        . "', '"; 
           $sql .= $data->cocktail->ingredients[$x]->measureID     . "', '"; 
           $sql .= $x                                              . "') ;"; 
-
           $result = pg_query($conn, $sql);
           if (!$result) {
             echo "Error: " . $sql . "<br>" ;
