@@ -15,8 +15,8 @@
                ng-model="recipe.recipeName" 
                ng-required="true">
         <p class="text-danger"
-           ng-show="profileForm.recipeName.$invalid && 
-                    profileForm.recipeName.$touched">{{prompts.errRecipeName}}</p>
+           ng-show="recipeForm.recipeName.$invalid && 
+                    recipeForm.recipeName.$touched">{{prompts.errRecipeName}}</p>
       </div>
 
       <div class="form-group col-xs-10 col-sm-3 col-md-3 col-lg-3 required">
@@ -51,7 +51,7 @@
             <option value="">{{ prompts.servesPlaceholder }}</option>
           </select>
           <p class="text-danger" 
-             ng-show="recipeForm.recipient.$invalid && recipeForm.recipient.$touched">recipient required</p>
+             ng-show="recipeForm.serves.$invalid && recipeForm.serves.$touched">field required</p>
       </div>
 
       <div class="clearfix"></div>
@@ -61,7 +61,16 @@
 
         <div class="form-group col-xs-10 col-sm-2 col-md-2 col-lg-2 required">
           <label for="inputAmount" ng-class="applyThisClass(member)">{{prompts.amount}}</label>
-          <input class="form-input" 
+
+          <select ng-model="recipe.amount"
+                  ng-required="true"
+                  name="amount"
+                  sb-number
+                  data-ng-options="(item.name) for item in amounts">
+            <option value="">{{ prompts.amountPlaceholder }}</option>
+          </select>
+
+<!--           <input class="form-input" 
                  type='number' 
                  ng-model='recipe.amount' 
                  name='number' 
@@ -71,12 +80,13 @@
                  sb-max='{{config.sbMax}}' 
                  sb-max-precision='{{config.sbMaxPrecision}}' 
                  sb-number />
+ -->         
           <p class="text-danger"
-             ng-show="recipeForm.number.$touched && 
-                      (recipeForm.number.$error['min-value']     ||
-                       recipeForm.number.$error['max-value']     ||
-                       recipeForm.number.$error['number']        ||
-                       recipeForm.number.$error['max-precision'])" >{{recipeForm.number.$customError}}
+             ng-show="recipeForm.amount.$touched && 
+                      (recipeForm.amount.$error['min-value']     ||
+                       recipeForm.amount.$error['max-value']     ||
+                       recipeForm.amount.$error['number']        ||
+                       recipeForm.amount.$error['max-precision'])" >{{recipeForm.amount.$customError}}
           </p>
 
         </div>
@@ -90,6 +100,10 @@
                   data-ng-options="(item.name) for item in measures | filter: {plural:usePlurals }">
             <option value="">{{ prompts.measurePlaceholder }}</option>
           </select>
+          <p class="text-danger" 
+             ng-show="recipeForm.measure.$invalid && recipeForm.measure.$touched">
+              {{prompts.errMeasureRequired}}
+          </p>          
         </div>
 
         <div class="form-group col-xs-10 col-sm-3 col-md-3 col-lg-3 required">
@@ -102,7 +116,9 @@
               <option value="">{{ prompts.ingredientPlaceholder }}</option>
             </select>
             <p class="text-danger" 
-               ng-show="recipeForm.recipient.$invalid && recipeForm.recipient.$touched">ingredient required</p>
+               ng-show="recipeForm.ingredient.$invalid && recipeForm.ingredient.$touched">
+                {{prompts.errIngredientRequired}}
+            </p>
         </div>
 
         <div class="btnAdd col-xs-10 col-sm-3 col-md-3 col-lg-3">

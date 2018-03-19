@@ -90,12 +90,16 @@ draanks.directive('sbNumber', function(){
 
       
       function validateNumber(value){
-        var validity = !isNaN(value);
+        if (typeof(value) == 'undefined'){
+          return 0;
+        }
+        var ingredientAmount = value.name;
+        var validity = !isNaN(value.name);
         ngModel.$setValidity('number', validity);
         if (validity == false){
           ngModel.$customError = 'Must be a number';
         } else {
-          if (value > 1){
+          if (ingredientAmount > 1){
             scope.usePlurals = 't';
           } else {
             scope.usePlurals = 'f';            
@@ -170,4 +174,4 @@ draanks.directive('sbMaxPrecision', function(){
     }
     
   };
-})
+});

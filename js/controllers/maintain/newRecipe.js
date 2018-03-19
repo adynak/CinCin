@@ -1,7 +1,7 @@
 draanks.controller('NewRecipeController', ['$scope', '$http', '$location', 'Data', '$rootScope', '$routeParams', 'toaster',
     function($scope, $http, $location, Data, $rootScope, $routeParams, toaster) {
 
-        $scope.usePlurals = 'f';
+        $scope.usePlurals = 't';
         $scope.allowNext = false;
 
         $scope.lists = {
@@ -15,6 +15,14 @@ draanks.controller('NewRecipeController', ['$scope', '$http', '$location', 'Data
               id: i
             });
         }
+
+        $scope.amounts = [];
+        for (var i = 0; i <= 825; i+=25) {
+            $scope.amounts.push({
+              name: i/100,
+              id: i/100
+            });
+        }        
 
         $scope.removeItem = function(rowNumber){
             $scope.lists.A.splice(rowNumber, 1);
@@ -68,7 +76,7 @@ draanks.controller('NewRecipeController', ['$scope', '$http', '$location', 'Data
 
         $scope.addIngredient = function(){
             var ingredient = {};
-            var amountFraction = (new Fraction($scope.recipe.amount)).toString();
+            var amountFraction = (new Fraction($scope.recipe.amount.name)).toString();
             var recipeIngredient = amountFraction +
                                   ' ' + 
                                   $scope.recipe.measure.name + 
@@ -81,6 +89,9 @@ draanks.controller('NewRecipeController', ['$scope', '$http', '$location', 'Data
             ingredient.ingredientID = $scope.recipe.ingredient.id
             $scope.lists.A.push(ingredient);
             $scope.allowNext = true;
+            $scope.recipe.amount = '';
+            $scope.recipe.measure = '';
+            $scope.recipe.ingredient = '';
 
         };
 

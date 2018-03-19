@@ -85,7 +85,7 @@ var txtNewRecipe = {
     ingredients: 'Ingredients',
     ingredientPlaceholder: 'Select Ingredient',    
     amount: 'How Much?',
-    amountPlaceholder: 'Enter a Number',
+    amountPlaceholder: 'Select an Amount',
     measure: 'Measure',
     measurePlaceholder: 'Select Measurement',
     category: 'Category',
@@ -103,7 +103,10 @@ var txtNewRecipe = {
     btnNext: 'Add To Library',
     btnAddIngredient: 'Add Ingredient',
     btnCancel: 'Cancel',
-    newRecipe: 'Your cocktail has been added.'
+    newRecipe: 'Your cocktail has been added.',
+    errIngredientRequired: 'ingredient required',
+    errAmountRequired: 'amount requried',
+    errMeasureRequired: 'measurement required'
 };
 
 var txtSideMenu = {
