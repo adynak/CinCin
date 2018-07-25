@@ -1,6 +1,6 @@
 <?php
 // $fp = fopen('/Library/PostgreSQL/EnterpriseDB-ApachePhp/apache/www/CinCin/test.txt','a+');
-$fp = fopen('/Library/WebServer/Documents/angular/git/CinCin/test.txt','a+');
+$fp = fopen('/Library/WebServer/Documents/CinCin/debug/test.txt','a+');
 
 $debug = false ;
 
@@ -111,11 +111,11 @@ else if ($data->task == 'getCocktails') {
       $sql  = "SELECT  ";
       $sql .= "  $dbSchema.recipe.name as cocktail, ";
       $sql .= "  $dbSchema.category.name as category, ";
-      $sql .= "  textcat_all($dbSchema.recipe.portions || ', ') as portions, ";
-      $sql .= "  textcat_all($dbSchema.recipeingredient.quantity || ', ') as quantity,   ";
-      $sql .= "  textcat_all($dbSchema.measure.name || ', ') as measure, ";
-      $sql .= "  textcat_all($dbSchema.ingredient.name || ', ') as ingredient, ";
-      $sql .= "  textcat_all($dbSchema.recipeingredient.mixorder || ', ') as mixorder  ";
+      $sql .= "  $dbSchema.textcat_all($dbSchema.recipe.portions || ', ') as portions, ";
+      $sql .= "  $dbSchema.textcat_all($dbSchema.recipeingredient.quantity || ', ') as quantity,   ";
+      $sql .= "  $dbSchema.textcat_all($dbSchema.measure.name || ', ') as measure, ";
+      $sql .= "  $dbSchema.textcat_all($dbSchema.ingredient.name || ', ') as ingredient, ";
+      $sql .= "  $dbSchema.textcat_all($dbSchema.recipeingredient.mixorder || ', ') as mixorder  ";
       $sql .= "FROM  ";
       $sql .= "  $dbSchema.recipeingredient, ";
       $sql .= "  $dbSchema.measure, ";
