@@ -119,7 +119,6 @@ draanks.controller('CocktailLibraryController', ['$scope', '$http', '$location',
         };
 
         $scope.searchDraanks = function(searchOption) {
-            debugger;
             if (searchOption == "clear"){
                 $scope.searchText = "";
             }
