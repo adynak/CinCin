@@ -1,8 +1,8 @@
 <?php
 // $fp = fopen('/Library/PostgreSQL/EnterpriseDB-ApachePhp/apache/www/CinCin/test.txt','a+');
-$fp = fopen('/Library/WebServer/Documents/CinCin/debug/test.txt','a+');
+$fp = fopen('/Library/WebServer/Documents/angular/git/CinCin/test.txt','a+');
 
-$debug = false ;
+$debug = true ;
 
 session_start();
 $data = json_decode(file_get_contents("php://input"));
@@ -10,7 +10,6 @@ $data = json_decode(file_get_contents("php://input"));
 $dbSchema = $data->securityInfo->schema;
 $dbPass   = $data->securityInfo->dbPass;
 $pgPort   = $data->securityInfo->pgPort;
-$pgPort   = 5432;
 
 $conn_string = "host=127.0.0.1 port=$pgPort dbname=postgres user=postgres password=$dbPass";
 $conn = pg_connect($conn_string);
@@ -103,7 +102,7 @@ else if ($data->task == 'getIngredients') {
 }
 
 else if ($data->task == 'getCocktails') {
-  $debug = false;
+  $debug = true;
     $myArray = array();
     if(isset($_SESSION["currentuser"]))
     {

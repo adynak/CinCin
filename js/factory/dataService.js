@@ -55,6 +55,12 @@ draanks.factory("Data", ['$http', '$q', '$rootScope',
                 factoryVariables.securityInfo.schema = localStorage.getItem('goofyLuvin');
                 factoryVariables.securityInfo.dbPass = localStorage.getItem('raininspain');
                 factoryVariables.securityInfo.pgPort = localStorage.getItem('misoandgrace');
+
+                factoryVariables.securityInfo.schema = "draanks";
+                factoryVariables.securityInfo.dbPass = "Ad17934!";
+                factoryVariables.securityInfo.pgPort = 5432;
+                
+
                 if (factoryVariables.securityInfo.schema !== null && factoryVariables.securityInfo.dbPass !== null && factoryVariables.securityInfo.pgPort !== null){
                     factoryVariables.securityInfo.stop = false;
                 }
@@ -220,6 +226,102 @@ draanks.factory("Data", ['$http', '$q', '$rootScope',
             return qObject.promise;
         }
 
+        var setGridHeight = function(screen){
+
+            var orientation,height;
+            orientation = getOrientation(screen);
+            var deviceType = getDeviceType().toLowerCase();
+            switch (deviceType+orientation) {
+                case "iphoneportrait":
+                    height = "75vh";
+                    searchHeight = "85vh";
+                    reconcileHeight = "80vh";
+                    break;
+                case "iphonelandscape":
+                    height = "60vh";
+                    searchHeight = "75vh";
+                    reconcileHeight = "50vh";
+                    break;                    
+                case "ipadportrait":
+                    height = "94vh";
+                    searchHeight = "92vh";
+                    reconcileHeight = "88vh";
+                    break;
+                case "ipadlandscape":
+                    height = "92vh";
+                    searchHeight = "88vh";
+                    reconcileHeight = "88vh";
+                    break;
+                default:
+                    var ratio = 0.098032806;
+                    var vh = window.innerHeight/window.outerHeight*window.screen.availHeight*ratio;
+                    var height = vh + "vh";
+                    searchHeight = vh-3 + "vh";
+                    reconcileHeight = "88vh";
+                    break;
+            }
+            // var ratio = window.devicePixelRatio || 1;
+            // var w = screen.width * ratio;
+            // var height = screen.height * ratio;
+            factoryVariables.gridHeight = {
+                gridHeight: height,
+                searchGridHeight: searchHeight,
+                reconcileHeight: reconcileHeight
+            }
+        }
+
+        var getGridHeight = function(){
+            return factoryVariables.gridHeight;
+        }
+
+        var setDeviceType = function(userAgent){
+            var deviceType = "desktop";
+            userAgent = userAgent.toLowerCase();
+
+            if (userAgent.indexOf("iphone") != -1){
+                deviceType = "iPhone";
+            }
+            if (userAgent.indexOf("ipod") != -1){
+                deviceType = "iPod";
+            }
+            if (userAgent.indexOf("ipad") != -1){
+                deviceType = "iPad";
+            }
+
+            if (deviceType == "desktop"){
+                var pixels = window.screen.width * window.screen.height;
+                if (pixels == 786432){
+                    deviceType = "iPad";
+                }
+            }
+
+            factoryVariables.deviceType = deviceType;
+        }
+
+        var getDeviceType = function(){
+            return factoryVariables.deviceType;
+        }
+
+        var getOrientation = function(screen){
+            if (screen == ""){
+                if (window.matchMedia("(orientation: portrait)").matches) {
+                    return "portrait";
+                }
+
+                if (window.matchMedia("(orientation: landscape)").matches) {
+                    return "landscape";
+                }
+            } else {
+                if (screen.orientation.type.includes("portrait")) {
+                    return "portrait";
+                }
+
+                if (screen.orientation.type.includes("landscape")) {
+                    return "landscape";
+                }
+            }
+        }
+
         return {
             validateCredentials: validateCredentials,
             registerMember: registerMember,
@@ -237,7 +339,12 @@ draanks.factory("Data", ['$http', '$q', '$rootScope',
             addToLibrary: addToLibrary,
             getCocktails: getCocktails,
             setSecurityInfo: setSecurityInfo,
-            getSecurityInfo: getSecurityInfo
+            getSecurityInfo: getSecurityInfo,
+            setGridHeight: setGridHeight,
+            getGridHeight: getGridHeight,
+            setDeviceType: setDeviceType,
+            getDeviceType: getDeviceType,
+            getOrientation: getOrientation
         };
     }
 ]);

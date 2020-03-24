@@ -5,74 +5,76 @@ draanks.controller('CocktailLibraryController', ['$scope', '$http', '$location',
         $scope.modalShown = false;
 
         var allCocktails;
+        var expandText = txtCocktailLibrary.collapseAll;
+        var expandIcon = 'ui-grid-icon-minus-squared';
 
-        // var myHeaderCellTemplate = '<div class="ngHeaderSortColumn {{col.headerClass}}" ng-style="{cursor: col.cursor}" ng-class="{ ngSorted: !noSortVisible }">'+
-        //                               '<div ng-click="col.sort($event)" ng-class="\'colt\' + col.index" class="ngHeaderText">{{col.displayName}}</div>'+
-        //                               '<div class="ngSortButtonDown" ng-show="col.showSortButtonDown()"></div>'+
-        //                               '<div class="ngSortButtonUp" ng-show="col.showSortButtonUp()"></div>'+
-        //                               '<div class="ngSortPriority">{{col.sortPriority}}</div>'+
-        //                            '</div>'+
-        //                            '<div ng-show="col.resizable" class="ngHeaderGrip" ng-click="col.gripClick($event)" ng-mousedown="col.gripOnMouseDown($event)"></div>';
+        $scope.gridHeight = Data.getGridHeight().gridHeight;
 
         $scope.gridOptions = {
             saveState: true,
             // enableFiltering: true,
             enableFiltering: false,            
-            treeRowHeaderAlwaysVisible: true,
-            enableColumnMenus: false,
+            treeRowHeaderAlwaysVisible: false,
+            showTreeRowHeader: false,
+            // enableColumnMenus: false,
             columnDefs: [
                 { 
-                    name: 'cocktail',
-                    // displayName: txtCocktailLibrary.columnCocktail,
-                    // enableFiltering: true,
-                    // width: 335,
-                    enableSorting: false,
-                    filter: {
-                        // condition: uiGridConstants.filter.ENDS_WITH,
-                        placeholder: ' search for a cocktail by name'
-                    },                    
-                    // sort: { priority: 1, direction: 'asc' }, 
-                    // headerCellTemplate: myHeaderCellTemplate, 
-                    cellTemplate: '<div ng-click="grid.appScope.showRecipe(row)" class="ui-grid-cell-contents">{{row.entity.cocktail}}</div>'
-                },
-
-                { 
-                    name: 'category', 
-                    showHeader: false,
+                    field: 'category', 
+                    displayName: txtCocktailLibrary.columnCategory,
+                    showHeader: true,
+                    enableColumnMenu: true,
                     grouping: { groupPriority: 0 }, 
-                    sort: { priority: 0, direction: 'asc' },  
                     enableFiltering: false,                   
                     width: 135,
-                    displayName: txtCocktailLibrary.columnCategory,
+                    enableHiding: false, 
                     enableSorting: false,
-                    cellTemplate: '<div><div ng-if="!col.grouping || col.grouping.groupPriority === undefined || col.grouping.groupPriority === null || ( row.groupHeader && col.grouping.groupPriority === row.treeLevel )" class="ui-grid-cell-contents" title="TOOLTIP">{{COL_FIELD CUSTOM_FILTERS}}</div></div>',
-                    headerCellTemplate: '<div class="ui-grid-cell-contents">' + txtCocktailLibrary.columnCategory + '</div>'
+                    groupingShowAggregationMenu: false,
+                    groupingShowGroupingMenu: false,
+                    cellTemplate: 'views/categoryColumn.html',
+                    headerCellClass: 'category',
+                    menuItems: [
+                      {
+                        title: expandText,
+                        icon:  expandIcon,
+                        action: function($event) {
+                            if ($scope.gridApi.grid.treeBase.expandAll == true){
+                                $scope.gridApi.treeBase.collapseAllRows();
+                                $scope.gridOptions.columnDefs[0].menuItems[0].title = txtCocktailLibrary.expandAll;;
+                                $scope.gridOptions.columnDefs[0].menuItems[0].icon  = "ui-grid-icon-plus-squared";
+                            } else {
+                                $scope.gridApi.treeBase.expandAllRows();
+                                $scope.gridOptions.columnDefs[0].menuItems[0].title = txtCocktailLibrary.collapseAll;;
+                                $scope.gridOptions.columnDefs[0].menuItems[0].icon  = "ui-grid-icon-minus-squared";
+                            }
+                        },
+                        context: $scope
+                      }
+                    ]
                 },
+                { 
+                    name: 'cocktail',
+                    enableSorting: false,
+                    headerCellTemplate: '<div class="ui-grid-cell-contents category">' + txtCocktailLibrary.columnCocktail + '</div>',
+                    cellTemplate: '<div ng-click="grid.appScope.showRecipe(row)" class="ui-grid-cell-contents">{{row.entity.cocktail}}</div>'
+                },                
                 {
                     name: 'ingredient',
                     displayName: 'Ingredients',
                     visible: false,
-                    filter: {
-                        placeholder: ' search for a cocktail by ingredient'
-                    },
-                    cellTemplate: '<div ng-click="grid.appScope.showRecipe(row)" class="ui-grid-cell-contents">{{row.entity.ingredient}}</div>'
+                    cellTemplate: '<div ng-click="grid.appScope.showRecipe(row)" class="ui-grid-cell-contents btn-primary">{{row.entity.ingredient}}</div>'
                 }
             ],
             onRegisterApi: function( gridApi ) {
                 $scope.gridApi = gridApi;
-
                 $scope.gridApi.grid.registerDataChangeCallback(function() {
                     $scope.gridApi.treeBase.expandAllRows();
+                    expandText = "Collapse";
+                    expandIcon = 'ui-grid-icon-minus-squared';
+                });  
+                $rootScope.$on('orientationchange', function () {
+                    Data.setGridHeight(window.screen);
+                    $scope.gridHeight = Data.getGridHeight().gridHeight;
                 });
-
-                // $scope.gridApi.grid.registerRowsProcessor( $scope.singleFilter, 200 );
-
-                // $scope.gridApi.core.on.filterChanged($scope, function() {
-                //     $timeout(function() {
-                //         $scope.gridApi.treeBase.expandAllRows();
-                //     },100);
-                // });
-              
             }
         };
 
@@ -96,6 +98,14 @@ draanks.controller('CocktailLibraryController', ['$scope', '$http', '$location',
             $scope.modalShown = false;
         };
 
+        $scope.toggleRow = function(grid,row){
+            if (row.treeNode.state == "collapsed"){
+                grid.api.treeBase.expandRow(row);
+            } else {
+                grid.api.treeBase.collapseRow(row);
+            }
+        }
+
         $scope.btnAction = function(){
             member = Data.getCurrentMember();
             if (member.member_type == 0){
@@ -106,12 +116,14 @@ draanks.controller('CocktailLibraryController', ['$scope', '$http', '$location',
             }
         };
 
-        $scope.searchDranks = function() {
+        $scope.searchDranks = function(searchOption) {
+            if (searchOption == "clear"){
+                scope.searchText = "";
+            }
             $scope.gridOptions.data = $filter('filter')(allCocktails, $scope.searchText, undefined);
             gridDimensions = ListServices.getGridHeight($scope.gridOptions, $scope.gridApi);
             $scope.gridHeight = gridDimensions.gridHeight;
             $scope.moveUp = gridDimensions.moveUp;
-            // $scope.gridApi.grid.refresh();
         };
 
         $scope.singleFilter = function( renderableRows ){

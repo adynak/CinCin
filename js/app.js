@@ -70,6 +70,16 @@ draanks.config(['$routeProvider', '$locationProvider', function($routeProvider, 
 
 
 }]).run(function($rootScope, $location, Data) {
+
+    Data.setDeviceType(navigator.userAgent);
+    Data.setGridHeight("");    
+
+    window.addEventListener("orientationchange", function() {
+        $rootScope.$broadcast('orientationchange');
+        Data.setGridHeight(screen);
+    }, false);
+
+
     $rootScope.$on("$routeChangeStart", function(event, next, current) {
         var securityInfo = Data.getSecurityInfo();
         if (securityInfo.stop){

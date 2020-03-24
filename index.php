@@ -65,8 +65,8 @@
 
     <div ng-controller="NavigationController">
         <nav class="cf" ng-include="'views/nav.html'"></nav>
-        <div style="padding:0 0 0 30px;">
-            <div class="row" ng-view>
+        <div style="padding:10px;">
+            <div ng-view>
             </div>
         </div>
     </div>

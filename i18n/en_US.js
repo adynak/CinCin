@@ -74,7 +74,9 @@ var txtCocktailLibrary = {
     columnCategory: 'Category',
     columnCocktail: 'Cocktail',
     searchEmptyText: 'Search',
-    gridHeight: '360px'
+    gridHeight: '400px',
+    expandAll: "Expand All",
+    collapseAll: "Collapse All"
 };
 
 var txtNewRecipe = {
