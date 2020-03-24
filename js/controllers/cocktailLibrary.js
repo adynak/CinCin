@@ -9,6 +9,7 @@ draanks.controller('CocktailLibraryController', ['$scope', '$http', '$location',
         var expandIcon = 'ui-grid-icon-minus-squared';
 
         $scope.gridHeight = Data.getGridHeight().gridHeight;
+        console.log($scope.gridHeight, "start")
 
         $scope.gridOptions = {
             saveState: true,
@@ -74,6 +75,7 @@ draanks.controller('CocktailLibraryController', ['$scope', '$http', '$location',
                 $rootScope.$on('orientationchange', function () {
                     Data.setGridHeight(window.screen);
                     $scope.gridHeight = Data.getGridHeight().gridHeight;
+                    console.log($scope.gridHeight);
                 });
             }
         };
@@ -116,7 +118,7 @@ draanks.controller('CocktailLibraryController', ['$scope', '$http', '$location',
             }
         };
 
-        $scope.searchDranks = function(searchOption) {
+        $scope.searchDraanks = function(searchOption) {
             if (searchOption == "clear"){
                 scope.searchText = "";
             }
