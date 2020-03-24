@@ -119,8 +119,9 @@ draanks.controller('CocktailLibraryController', ['$scope', '$http', '$location',
         };
 
         $scope.searchDraanks = function(searchOption) {
+            debugger;
             if (searchOption == "clear"){
-                scope.searchText = "";
+                $scope.searchText = "";
             }
             $scope.gridOptions.data = $filter('filter')(allCocktails, $scope.searchText, undefined);
             gridDimensions = ListServices.getGridHeight($scope.gridOptions, $scope.gridApi);
