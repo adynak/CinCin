@@ -3,7 +3,7 @@
     <input type="text" style="height:30px;" class="form-control" ng-change="searchDraanks(true)" placeholder="search" ng-model="searchText" />      
     <span class="input-group-addon">
       <a data-toggle="tooltip" data-placement="left" title="Clear Search"> 
-        <i ng-click="searchGrid('clear');" class='glyphicon glyphicon-remove-circle'></i>
+        <i ng-click="searchDraanks('clear');" class='glyphicon glyphicon-remove-circle'></i>
       </a>
     </span>
   </div>
@@ -15,7 +15,8 @@
       ui-grid-selection 
       ui-grid-grouping 
       ui-grid-resize-columns 
-      ui-grid-auto-resize style="height: {{gridHeight}}; background-color:white;" 
+      ui-grid-auto-resize 
+      style="height: {{gridHeight}}; background-color:white;" 
       ui-grid="gridOptions" 
       ui-grid-exporter>
    </div>
