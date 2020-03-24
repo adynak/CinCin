@@ -12,7 +12,7 @@
     "@angular/common": "^4.2.4",
     "@angular/compiler": "^4.2.4",
     "@angular/core": "^4.2.4",
-    "angular": "^1.6.4",
+    "angular": "^1.7.9",
     "angular-animate": "^1.6.4",
     "angular-drag-and-drop-lists": "^2.1.0",
     "angular-location-update": "0.0.2",
