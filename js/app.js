@@ -1,5 +1,16 @@
-var draanks = angular.module('draanks', ['ngRoute', 'ngAnimate', 'toaster', 'ngTouch', 
-                                     'ui.grid', 'ngMessages','dndLists', 'ui.grid.grouping']);
+var draanks = angular.module('draanks', 
+        [
+            'ngRoute', 
+            'ngAnimate', 
+            'toaster', 
+            'ngTouch',
+            'ui.grid', 
+            'ngMessages',
+            'dndLists', 
+            'ui.grid.grouping', 
+            'ui.grid.autoResize'
+        ]
+);
 
 draanks.config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
     

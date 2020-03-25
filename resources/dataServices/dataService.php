@@ -11,6 +11,11 @@ $dbSchema = $data->securityInfo->schema;
 $dbPass   = $data->securityInfo->dbPass;
 $pgPort   = $data->securityInfo->pgPort;
 
+$dbSchema = "draanks";
+$dbPass   = "Ad17934!";
+$pgPort   = 5432;
+
+
 $conn_string = "host=127.0.0.1 port=$pgPort dbname=postgres user=postgres password=$dbPass";
 $conn = pg_connect($conn_string);
 

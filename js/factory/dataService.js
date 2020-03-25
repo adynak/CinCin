@@ -56,9 +56,9 @@ draanks.factory("Data", ['$http', '$q', '$rootScope',
                 factoryVariables.securityInfo.dbPass = localStorage.getItem('raininspain');
                 factoryVariables.securityInfo.pgPort = localStorage.getItem('misoandgrace');
 
-                factoryVariables.securityInfo.schema = "draanks";
-                factoryVariables.securityInfo.dbPass = "Ad17934!";
-                factoryVariables.securityInfo.pgPort = 5432;
+                factoryVariables.securityInfo.schema = "catsndogs";
+                factoryVariables.securityInfo.dbPass = "teainchina";
+                factoryVariables.securityInfo.pgPort = "raininspain";
                 
 
                 if (factoryVariables.securityInfo.schema !== null && factoryVariables.securityInfo.dbPass !== null && factoryVariables.securityInfo.pgPort !== null){
@@ -243,19 +243,19 @@ draanks.factory("Data", ['$http', '$q', '$rootScope',
                     reconcileHeight = "50vh";
                     break;                    
                 case "ipadportrait":
-                    height = "94vh";
+                    height = "89vh";
                     searchHeight = "92vh";
                     reconcileHeight = "88vh";
                     break;
                 case "ipadlandscape":
-                    height = "92vh";
+                    height = "84vh";
                     searchHeight = "88vh";
                     reconcileHeight = "88vh";
                     break;
                 default:
                     var ratio = 0.098032806;
                     var vh = window.innerHeight/window.outerHeight*window.screen.availHeight*ratio;
-                    var height = vh + "vh";
+                    var height = 80 + "vh";
                     searchHeight = vh-3 + "vh";
                     reconcileHeight = "88vh";
                     break;

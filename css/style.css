@@ -344,7 +344,7 @@ section{
 }
 
 body  {
-    /*background-image: url("../resources/images/Library.jpg");*/
+    background-image: url("../resources/images/Library.jpg");
     background-size:100%;
 }
 
@@ -371,7 +371,7 @@ body  {
 }
 
 .cocktailGrid{
-  width: 100%;
+  width: 80%;
   /*height: auto !important;*/
   margin-right: auto;
   margin-left: auto;
@@ -380,4 +380,24 @@ body  {
 .category {
   color: white;  
   background-color: #3778b5 !important;*/
+}
+
+.gridSearch {
+  width: 80.25%;
+  height:30px;
+  margin-right: auto;
+  margin-left: auto;
+  border-top-left-radius:5px;
+  border-top-right-radius:5px;
+  border-bottom-left-radius:0px;
+  border-bottom-right-radius:0px;
+  border: 1px solid white;
+}
+
+.squareBottomCorners{
+  border-top-left-radius:5px;
+  border-top-right-radius:5px;
+  border-bottom-left-radius:0px;
+  border-bottom-right-radius:0px;
+  border: 1px solid white; 
 }

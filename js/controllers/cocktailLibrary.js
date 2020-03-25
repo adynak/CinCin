@@ -9,7 +9,6 @@ draanks.controller('CocktailLibraryController', ['$scope', '$http', '$location',
         var expandIcon = 'ui-grid-icon-minus-squared';
 
         $scope.gridHeight = Data.getGridHeight().gridHeight;
-        console.log($scope.gridHeight, "start")
 
         $scope.gridOptions = {
             saveState: true,

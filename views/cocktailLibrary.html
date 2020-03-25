@@ -1,15 +1,22 @@
-<div class="navbar gridSearch">
-  <div class="input-group add-on">
-    <input type="text" style="height:30px;" class="form-control" ng-change="searchDraanks(true)" placeholder="search" ng-model="searchText" />      
-    <span class="input-group-addon">
-      <a data-toggle="tooltip" data-placement="left" title="Clear Search"> 
+<div class="navbar">
+  <div class="input-group add-on gridSearch">
+    <input type="text" 
+           style="height:30px;" 
+           class="form-control gridSearch" 
+           ng-change="searchDraanks(true)" 
+           placeholder="search" 
+           ng-model="searchText" />     
+    <span class="input-group-addon squareBottomCorners">
+      <a data-toggle="tooltip" 
+         data-placement="left" 
+         title="Clear Search"> 
         <i ng-click="searchDraanks('clear');" class='glyphicon glyphicon-remove-circle'></i>
       </a>
     </span>
   </div>
 </div>
 
-<div style="margin-top: -40px;">
+<div style="margin-top: -38px;">
    <div class="cocktailGrid" 
       ui-grid-edit 
       ui-grid-selection 
