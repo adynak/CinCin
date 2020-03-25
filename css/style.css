@@ -391,7 +391,6 @@ body  {
   border-top-right-radius:5px;
   border-bottom-left-radius:0px;
   border-bottom-right-radius:0px;
-  border: 1px solid white;
 }
 
 .squareBottomCorners{
@@ -399,5 +398,4 @@ body  {
   border-top-right-radius:5px;
   border-bottom-left-radius:0px;
   border-bottom-right-radius:0px;
-  border: 1px solid white; 
 }
