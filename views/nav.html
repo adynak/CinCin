@@ -19,15 +19,18 @@
       <ul class="nav navbar-nav navbar-right">
         <li class="active">
           <a ng-hide="authenticated" ng-href="#/login">{{prompts.btnLogin}}</a></li>
-<!-- 
-        <li>
-          <a ng-hide="authenticated" ng-href="#/register">{{prompts.btnRegister}}</a></li>
-        <li>
-           -->
+
+<!--         <li>
+          <a ng-hide="authenticated" ng-href="#/register">{{prompts.btnRegister}}</a>
+        </li>
+ -->        
+        <li class="active">
           <a ng-hide="isnotloggedin" 
              ng-controller="RegistrationController" 
              ng-href="#/login" 
-             ng-click="logout()">{{prompts.btnLogout}}</a></li>
+             ng-click="logout()">{{prompts.btnLogout}}
+           </a>
+        </li>
       </ul>
     </div>
   </div>
