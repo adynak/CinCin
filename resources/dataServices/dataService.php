@@ -11,6 +11,38 @@ $dbSchema = $data->securityInfo->schema;
 $dbPass   = $data->securityInfo->dbPass;
 $pgPort   = $data->securityInfo->pgPort;
 
+class tracker {
+  public $IP;
+  public $timeStamp;
+  public $cocktail;
+
+  function __construct($cocktail)  
+    { 
+        $this->IP = getRealIpAddr(); 
+        $this->timeStamp = time(); 
+        $this->cocktail = $cocktail;
+    } 
+}
+
+function getRealIpAddr()
+{
+  $ip = "unknown";
+
+  if (!empty($_SERVER['HTTP_CLIENT_IP']))   //check ip from share internet
+  {
+    $ip=$_SERVER['HTTP_CLIENT_IP'];
+  }
+  elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR']))   //to check ip is pass from proxy
+  {
+    $ip=$_SERVER['HTTP_X_FORWARDED_FOR'];
+  }
+  else
+  {
+    $ip=$_SERVER['REMOTE_ADDR'];
+  }
+  return $ip;
+}
+
 $dbSchema = "draanks";
 $dbPass   = "Ad17934!";
 $pgPort   = 5432;
@@ -385,6 +417,20 @@ else if ($data->task == 'updateuser') {
     } else {
         echo 'nosession';
     }
+}
+
+else if ($data->task == 'trackDraanks') {
+
+  $tracker = new tracker($data->cocktail); 
+  
+  $logFile = fopen('/Library/WebServer/Documents/CinCin/usageTracking/draanks.csv','a+');
+  fwrite($logFile , "\n");  
+  fwrite($logFile , $tracker->IP . ",");
+  fwrite($logFile , $tracker->timeStamp . ",");
+  fwrite($logFile , $tracker->cocktail);
+  fclose($logFile);
+
+
 }
 
 if ($debug) {

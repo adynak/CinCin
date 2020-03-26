@@ -205,6 +205,27 @@ draanks.factory("Data", ['$http', '$q', '$rootScope',
             return qObject.promise;
         }
 
+        var trackDraanks = function(row){
+            var qObject = $q.defer();
+            var params = {
+                task : 'trackDraanks',
+                cocktail: row.entity.cocktail
+            };
+            $http({
+                method: 'POST',
+                url: 'resources/dataServices/dataService.php',
+                data: params,
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+            }).then(function(success) {
+                qObject.resolve(success.data);
+            }, function(err) {
+                console.log(err);
+            });
+            return qObject.promise;
+        }
+
         var getSession = function(task){
             var qObject = $q.defer();
             var params = {
@@ -344,7 +365,8 @@ draanks.factory("Data", ['$http', '$q', '$rootScope',
             getGridHeight: getGridHeight,
             setDeviceType: setDeviceType,
             getDeviceType: getDeviceType,
-            getOrientation: getOrientation
+            getOrientation: getOrientation,
+            trackDraanks: trackDraanks
         };
     }
 ]);

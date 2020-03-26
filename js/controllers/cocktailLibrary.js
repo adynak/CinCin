@@ -88,6 +88,7 @@ draanks.controller('CocktailLibraryController', ['$scope', '$http', '$location',
             if (typeof(row.entity.cocktail) == 'undefined'){
                 return;
             } else {
+                Data.trackDraanks(row);
                 $scope.selectedRecipeName = row.entity.cocktail;
                 $scope.portions           = row.entity.portions;
                 $scope.recipe             = row.entity.recipe;
