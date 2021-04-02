@@ -5,7 +5,8 @@ draanks.controller('NewRecipeController', ['$scope', '$http', '$location', 'Data
         $scope.allowNext = false;
 
         $scope.lists = {
-            "A": []
+            "A": [],
+            "G": []
         };
 
         $scope.serves = [];
@@ -58,6 +59,10 @@ draanks.controller('NewRecipeController', ['$scope', '$http', '$location', 'Data
             $scope.categories = results;
         });
 
+        Data.getSession('getGarnishes').then(function(results) {
+            $scope.garnishes = results;
+        });
+
 
         $scope.sendRecipe = function() {
             var cocktail = {};
@@ -94,6 +99,14 @@ draanks.controller('NewRecipeController', ['$scope', '$http', '$location', 'Data
             $scope.recipe.ingredient = '';
 
         };
+
+        $scope.addGarnish = function(){
+            var garnish = {};
+            garnish.label = $scope.recipe.garnish.name;
+            garnish.garnishID = $scope.recipe.garnish.id
+            $scope.lists.G.push(garnish);
+            $scope.recipe.garnish = '';
+        }
 
         $scope.deleteRow = function(row){
             var index = $scope.data.indexOf(row.entity);

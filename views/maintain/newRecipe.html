@@ -130,6 +130,31 @@
         </div>
 
       </fieldset>
+      <br>
+
+      <fieldset class="field_set">
+
+        <div class="form-group col-xs-10 col-sm-3 col-md-3 col-lg-3">
+          <label for="garnish" ng-class="applyThisClass(member)">{{prompts.garnish}}</label>
+          <br>
+            <select data-ng-model="recipe.garnish"
+                    ng-required="false"
+                    name="garnish"
+                    data-ng-options="(item.name) for item in garnishes">
+              <option value="">{{ prompts.garnishPlaceholder }}</option>
+            </select>
+
+        </div>
+
+        <div class="btnAdd col-xs-10 col-sm-3 col-md-3 col-lg-3">
+          <button class="btn btn-sm btn-primary btn-block" 
+            type="button" 
+            ng-click="addGarnish();"
+            ng-disabled="recipeForm.$invalid">{{prompts.btnAddGarnish}}
+          </button>
+        </div>
+
+      </fieldset>
 
       <br>
       <br>
@@ -138,7 +163,31 @@
         <h1>
           <span>{{recipe.recipeName}} {{prompts.ingredients}}</span>
         </h1>
-        <div ng-repeat="(listName, list) in lists">
+        <div ng-repeat="(listName, list) in lists.A">
+          <ul class="ingredientList" 
+              dnd-list="list" 
+              dnd-drop="dropCallback(item, type, listName)">
+            <li ng-repeat="item in list"
+                dnd-draggable="item"
+                dnd-type="listName"
+                dnd-moved="list.splice($index, 1)"
+                dnd-effect-allowed="move">
+                <span ng-click="removeItem($index)" 
+                      style="cursor:pointer;" 
+                      class="glyphicon glyphicon-remove-sign icon-danger">
+                </span>
+                &nbsp;&nbsp;{{item.label}}
+            </li>
+          </ul>
+        </div>
+      </div>
+
+
+      <div ng-hide="!allowNext" class="fieldset">
+        <h1>
+          <span>{{recipe.recipeName}} {{prompts.garnish}}</span>
+        </h1>
+        <div ng-repeat="(listName, list) in lists.G">
           <ul class="ingredientList" 
               dnd-list="list" 
               dnd-drop="dropCallback(item, type, listName)">
