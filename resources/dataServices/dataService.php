@@ -227,6 +227,26 @@ else if ($data->task == 'getCategories') {
     }    
 }
 
+else if ($data->task == 'getGarnishes') {
+  $debug = false;
+    $myArray = array();
+    if(isset($_SESSION["currentuser"]))
+    {
+      $sql = "SELECT * FROM $dbSchema.garnish order by name";
+      $result = pg_query($conn, $sql);
+      if (!$result) {
+        echo "Error: " . $sql . '<br>' ;
+      } else {
+        while ($row = pg_fetch_assoc($result)) {
+          $myArray[] = $row;
+        }
+        echo json_encode($myArray);
+      }
+    } else {
+      echo 'nosession';
+    }    
+}
+
 else if ($data->task == 'getMeasures') {
   $debug = false;
     $myArray = array();

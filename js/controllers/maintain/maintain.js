@@ -25,8 +25,13 @@ draanks.controller('MaintainController', ['$scope', '$http', '$location', 'Data'
                 placeholder = txtMaintainTables.maintainWhat[2].placeHolder;
                 tableName   = txtMaintainTables.maintainWhat[2].tableName;
                 break;
+            case '/maintain/garnish':
+                getWhat     = txtMaintainTables.maintainWhat[3].get;
+                pageName    = txtMaintainTables.maintainWhat[3].pageName;
+                placeholder = txtMaintainTables.maintainWhat[3].placeHolder;
+                tableName   = txtMaintainTables.maintainWhat[3].tableName;
+                break;                
         }
-
         $scope.prompts.pageName    = pageName;
         $scope.prompts.placeholder = placeholder;
 

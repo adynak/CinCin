@@ -1,6 +1,7 @@
 <?php
 
-	$fp = fopen('/Library/WebServer/Documents/angular/git/draanks/test.txt','a+');
+	$fp = fopen('/Library/WebServer/Documents/angular/git/CinCin/test.txt','a+');
+
 	$results = array(); 
 	$newID   = '';
 
