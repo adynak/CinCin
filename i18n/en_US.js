@@ -89,6 +89,7 @@ var txtCocktailLibrary = {
 var txtNewRecipe = {
     pageTitle: 'Add A New Recipe',
     recipeName: 'Recipe Name',
+    newRecipeName: 'New Cocktail Recipe Name',
     recipeNamePlaceholder: 'Enter the Recipe Name',
     garnish: 'Garnish',
     garnishPlaceholder: 'Select Garnish',

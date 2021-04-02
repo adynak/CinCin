@@ -5,8 +5,8 @@ draanks.controller('NewRecipeController', ['$scope', '$http', '$location', 'Data
         $scope.allowNext = false;
 
         $scope.lists = {
-            "A": [],
-            "G": []
+            "Ingredients": [],
+            "Garnish": []
         };
 
         $scope.serves = [];
@@ -25,11 +25,19 @@ draanks.controller('NewRecipeController', ['$scope', '$http', '$location', 'Data
             });
         }        
 
-        $scope.removeItem = function(rowNumber){
-            $scope.lists.A.splice(rowNumber, 1);
-            if ($scope.lists.A.length == 0){
-                $scope.allowNext = false;
-            }            
+        $scope.removeItem = function(rowNumber,listName){
+            switch (listName) {
+                case "Ingredients":
+                    $scope.lists.Ingredients.splice(rowNumber, 1);
+                    if ($scope.lists.A.length == 0){
+                        $scope.allowNext = false;
+                    }            
+                    break;
+                case "Garnish":
+                    $scope.lists.Garnish.splice(rowNumber, 1);
+                break;
+            }
+            
         };
 
         $scope.dropCallback = function(item, type, listName) {
@@ -63,7 +71,6 @@ draanks.controller('NewRecipeController', ['$scope', '$http', '$location', 'Data
             $scope.garnishes = results;
         });
 
-
         $scope.sendRecipe = function() {
             var cocktail = {};
             cocktail.name         = $scope.recipeForm.recipeName.$modelValue;
@@ -92,7 +99,7 @@ draanks.controller('NewRecipeController', ['$scope', '$http', '$location', 'Data
             ingredient.amount       = amountFraction;
             ingredient.measureID    = $scope.recipe.measure.id;
             ingredient.ingredientID = $scope.recipe.ingredient.id
-            $scope.lists.A.push(ingredient);
+            $scope.lists.Ingredients.push(ingredient);
             $scope.allowNext = true;
             $scope.recipe.amount = '';
             $scope.recipe.measure = '';
@@ -104,7 +111,7 @@ draanks.controller('NewRecipeController', ['$scope', '$http', '$location', 'Data
             var garnish = {};
             garnish.label = $scope.recipe.garnish.name;
             garnish.garnishID = $scope.recipe.garnish.id
-            $scope.lists.G.push(garnish);
+            $scope.lists.Garnish.push(garnish);
             $scope.recipe.garnish = '';
         }
 

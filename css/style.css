@@ -9,7 +9,7 @@
 
 .field_set{
   border: 1px solid;
-  padding: 10px;
+  padding: 2px;
   margin-left: 10px;
   margin-right: 10px;
 }
@@ -17,14 +17,15 @@
 .fieldset {
   border: 1px solid #ddd;
   margin-top: 1em;
+  margin-bottom: 20px;
   display: inline-block;
-  width: 50%;
+  width: 100%;
   float: left;
 
 }
 
 .fieldset h1 {
-  font-size: 24px;
+  font-size: 18px;
   text-align: center;
   color:#3879D9;
 }
@@ -273,7 +274,7 @@ section{
  
 .ingredientList {
   list-style-type:none;
-  position: relative;
+  /*position: relative;*/
   top: -35px;
 }
 
