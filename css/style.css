@@ -413,6 +413,6 @@ body  {
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffd9edf7', endColorstr='#ffb9def0', GradientType=0);
   background-repeat: repeat-x;
   height:25px;
-  padding: 2px 0px 2px 15px;
+  padding: 3px 0px 2px 15px;
   color: #275c7c;
 }

@@ -151,7 +151,9 @@ else if ($data->task == 'getCocktails') {
       $sql .= "  $dbSchema.textcat_all($dbSchema.recipeingredient.quantity || ', ') as quantity,   ";
       $sql .= "  $dbSchema.textcat_all($dbSchema.measure.name || ', ') as measure, ";
       $sql .= "  $dbSchema.textcat_all($dbSchema.ingredient.name || ', ') as ingredient, ";
+      $sql .= "  $dbSchema.textcat_all($dbSchema.recipeingredient.garnish || ', ') as garnish, ";
       $sql .= "  $dbSchema.textcat_all($dbSchema.recipeingredient.mixorder || ', ') as mixorder  ";
+
       $sql .= "FROM  ";
       $sql .= "  $dbSchema.recipeingredient, ";
       $sql .= "  $dbSchema.measure, ";
@@ -176,27 +178,34 @@ else if ($data->task == 'getCocktails') {
       } else {
         while ($row = pg_fetch_assoc($result)) {
 
+          $garnishItems = array();
           $quantity   = explode(', ',$row['quantity']);
           $measure    = explode(', ',$row['measure']);
           $ingredient = explode(', ',$row['ingredient']);
           $mixorder   = explode(', ',$row['mixorder']);
           $portions   = explode(', ',$row['portions']);
+          $garnish    = explode(', ',$row['garnish']);
           $max = count($mixorder);
           unset($mixorder[$max-1]);
+          unset($garnish[$max-1]);
           $recipe      = array();
           $ingredients = array();          
           $max = count($mixorder);
 
           for ($x = 0 ; $x < $max ; $x++){
             $step = $quantity[$x] . ' ' . $measure[$x] . ' ' . $ingredient[$x];
-            $recipe[$mixorder[$x]] = $step;
-            $ingredients[$mixorder[$x]] = $ingredient[$x];
+            if ($garnish[$x] == 0) {
+              $recipe[$mixorder[$x]] = $step;
+              $ingredients[$mixorder[$x]] = $ingredient[$x];
+            } else {
+              $garnishItems[] = $step;
+            }
           }
 
           $row['portions'] = $portions[0];
           $row['ingredients'] = $ingredients;
 
-          // $row['recipe'] = array('1 ounce something','2 dashes bitters','3 ice cubes','');
+          $row['garnish'] = $garnishItems;
           $row['recipe'] = $recipe;
           $myArray[] = $row;
         }
@@ -375,12 +384,14 @@ else if ($data->task == 'addToLibrary') {
           $sql .= "ingredientid, ";
           $sql .= "quantity, ";          
           $sql .= "measureid, ";
+          $sql .= "garnish, ";          
           $sql .= "mixorder) ";
           $sql .= "values ('"  ;
           $sql .= $recipeID                                       . "', '"; 
           $sql .= $data->cocktail->ingredients[$x]->ingredientID  . "', '"; 
           $sql .= $data->cocktail->ingredients[$x]->amount        . "', '"; 
           $sql .= $data->cocktail->ingredients[$x]->measureID     . "', '"; 
+          $sql .= $data->cocktail->ingredients[$x]->garnishFlag   . "', '"; 
           $sql .= $x                                              . "') ;"; 
           $result = pg_query($conn, $sql);
           if (!$result) {

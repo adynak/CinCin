@@ -5,8 +5,7 @@ draanks.controller('NewRecipeController', ['$scope', '$http', '$location', 'Data
         $scope.allowNext = false;
 
         $scope.lists = {
-            "Ingredients": [],
-            "Garnish": []
+            "Ingredients": []
         };
 
         $scope.serves = [];
@@ -29,13 +28,10 @@ draanks.controller('NewRecipeController', ['$scope', '$http', '$location', 'Data
             switch (listName) {
                 case "Ingredients":
                     $scope.lists.Ingredients.splice(rowNumber, 1);
-                    if ($scope.lists.A.length == 0){
+                    if ($scope.lists.Ingredients.length == 0){
                         $scope.allowNext = false;
                     }            
                     break;
-                case "Garnish":
-                    $scope.lists.Garnish.splice(rowNumber, 1);
-                break;
             }
             
         };
@@ -67,18 +63,13 @@ draanks.controller('NewRecipeController', ['$scope', '$http', '$location', 'Data
             $scope.categories = results;
         });
 
-        Data.getSession('getGarnishes').then(function(results) {
-            $scope.garnishes = results;
-        });
-
         $scope.sendRecipe = function() {
             var cocktail = {};
             cocktail.name         = $scope.recipeForm.recipeName.$modelValue;
             cocktail.serves       = $scope.recipeForm.serves.$modelValue;
-            cocktail.ingredients  = $scope.lists.A;
+            cocktail.ingredients  = $scope.lists.Ingredients;
             cocktail.category     = $scope.recipeForm.category.$modelValue;
             cocktail.tasteProfile = $scope.recipeForm.tasteProfile.$modelValue;
-
             Data.addToLibrary(cocktail).then(function(results) {
                 $scope.recipients = results;
                 $location.path('/success');
@@ -98,7 +89,8 @@ draanks.controller('NewRecipeController', ['$scope', '$http', '$location', 'Data
             ingredient.label        = recipeIngredient;
             ingredient.amount       = amountFraction;
             ingredient.measureID    = $scope.recipe.measure.id;
-            ingredient.ingredientID = $scope.recipe.ingredient.id
+            ingredient.ingredientID = $scope.recipe.ingredient.id;
+            ingredient.garnishFlag  = 19;
             $scope.lists.Ingredients.push(ingredient);
             $scope.allowNext = true;
             $scope.recipe.amount = '';
@@ -106,14 +98,6 @@ draanks.controller('NewRecipeController', ['$scope', '$http', '$location', 'Data
             $scope.recipe.ingredient = '';
 
         };
-
-        $scope.addGarnish = function(){
-            var garnish = {};
-            garnish.label = $scope.recipe.garnish.name;
-            garnish.garnishID = $scope.recipe.garnish.id
-            $scope.lists.Garnish.push(garnish);
-            $scope.recipe.garnish = '';
-        }
 
         $scope.deleteRow = function(row){
             var index = $scope.data.indexOf(row.entity);
