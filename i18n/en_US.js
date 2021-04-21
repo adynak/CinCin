@@ -2,7 +2,6 @@ var txtMaintainTables = {
     menuCategory: 'Categories',
     menuIngredient: 'Ingredients',
     menuMeasure: 'Measures',
-    menuGarnish: 'Garnishes',
     menuHome: 'Home',
     removed: 'Removed',
     removedFailed: 'Could not remove',
@@ -31,12 +30,6 @@ var txtMaintainTables = {
             pageName: 'Measurement',            
             placeHolder: 'New Measurement Name',
             get: 'getMeasures'            
-        },
-        {
-            tableName: 'garnish',
-            pageName: 'Garnish',            
-            placeHolder: 'New Garnish Name',
-            get: 'getGarnishes'            
         }
     ],
     listHeight: '360px'

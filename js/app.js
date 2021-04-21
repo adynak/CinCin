@@ -68,11 +68,6 @@ draanks.config(['$routeProvider', '$locationProvider', function($routeProvider, 
         controller: 'MaintainController',
         task: 'getsessiondata'
     }). 
-    when('/maintain/garnish', {
-        templateUrl: 'views/maintain/maintain.html',
-        controller: 'MaintainController',
-        task: 'getsessiondata'
-    }).     
     when('/getSecurity',{
         templateUrl: 'views/security.html',
         controller: 'SecurityController',
