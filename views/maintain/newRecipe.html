@@ -80,7 +80,7 @@
  -->
         </div>
 
-        <div class="form-group col-xs-10 col-sm-3 col-md-3 col-lg-3 required">
+        <div class="form-group col-xs-10 col-sm-2 col-md-2 col-lg-2 required">
           <label for="measure" ng-class="applyThisClass(member)">{{prompts.measure}}</label>
           <br>
           <select data-ng-model="recipe.measure"
@@ -114,7 +114,12 @@
  -->            
         </div>
 
-        <div class="btnAdd col-xs-10 col-sm-3 col-md-3 col-lg-3">
+        <div class="form-group col-xs-10 col-sm-2 col-md-2 col-lg-2">
+          <br>
+            <input ng-model="isGarnish" type="checkbox" ng-checked="false">&nbsp;This ingredient is a garnish
+        </div>
+
+        <div class="btnAdd col-xs-10 col-sm-2 col-md-2 col-lg-2">
           <button class="btn btn-sm btn-primary btn-block" 
             type="button" 
             ng-click="addIngredient();"
@@ -124,30 +129,6 @@
 
       </fieldset>
       <br>
-
-      <fieldset class="field_set">
-
-        <div class="form-group col-xs-10 col-sm-3 col-md-3 col-lg-3">
-          <label for="garnish" ng-class="applyThisClass(member)">{{prompts.garnish}}</label>
-          <br>
-            <select data-ng-model="recipe.garnish"
-                    ng-required="false"
-                    name="garnish"
-                    data-ng-options="(item.name) for item in garnishes">
-              <option value="">{{ prompts.garnishPlaceholder }}</option>
-            </select>
-
-        </div>
-
-        <div class="btnAdd col-xs-10 col-sm-3 col-md-3 col-lg-3">
-          <button class="btn btn-sm btn-primary btn-block" 
-            type="button" 
-            ng-click="addGarnish();"
-            ng-disabled="!recipe.garnish">{{prompts.btnAddGarnish}}
-          </button>
-        </div>
-
-      </fieldset>
 
       <div ng-hide="!allowNext" class="fieldset">
         <h1>

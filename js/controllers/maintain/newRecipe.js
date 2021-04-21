@@ -90,12 +90,13 @@ draanks.controller('NewRecipeController', ['$scope', '$http', '$location', 'Data
             ingredient.amount       = amountFraction;
             ingredient.measureID    = $scope.recipe.measure.id;
             ingredient.ingredientID = $scope.recipe.ingredient.id;
-            ingredient.garnishFlag  = 19;
+            ingredient.garnishFlag  = $scope.isGarnish ? 1 : 0;
             $scope.lists.Ingredients.push(ingredient);
             $scope.allowNext = true;
             $scope.recipe.amount = '';
             $scope.recipe.measure = '';
             $scope.recipe.ingredient = '';
+            $scope.isGarnish = false;
 
         };
 
