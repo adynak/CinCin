@@ -32,10 +32,18 @@
 <div>
   <modal-dialog show='modalShown' width='400px' txtButtonDone='{{prompts.btnCancel}}'>
     <h4 class="alert alert-info">{{ selectedRecipeName }} (Serves {{portions}})</h4>
+    <ul>
+      <li class="item" ng-repeat="ingredient in recipe">
+        <strong>{{ ingredient }}</strong>
+      </li>
+    </ul>
+    <div ng-if="showGarnish">
+      <h4 class="alert-garnish">Garnish</h4>
       <ul>
-        <li class="item" ng-repeat="ingredient in recipe">
-          <strong>{{ ingredient }}</strong>
+        <li class="item" ng-repeat="garnishItem in garnish">
+          <strong>{{ garnishItem }}</strong>
         </li>
       </ul>
+    </div>
   </modal-dialog>
 </div>
