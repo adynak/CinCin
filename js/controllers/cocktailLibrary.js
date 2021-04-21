@@ -92,6 +92,8 @@ draanks.controller('CocktailLibraryController', ['$scope', '$http', '$location',
                 $scope.selectedRecipeName = row.entity.cocktail;
                 $scope.portions           = row.entity.portions;
                 $scope.recipe             = row.entity.recipe;
+                $scope.garnish            = row.entity.garnish;
+                $scope.showGarnish = Boolean($scope.garnish && Object.keys($scope.garnish).length);
                 $scope.modalShown = true;
             }
         };
