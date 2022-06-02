@@ -11,7 +11,7 @@
   "dependencies": {
     "@angular/common": "^4.4.7",
     "@angular/compiler": "^4.4.7",
-    "@angular/core": "^4.4.7",
+    "@angular/core": "^11.0.5",
     "angular": "^1.8.0",
     "angular-animate": "^1.7.9",
     "angular-drag-and-drop-lists": "^2.1.0",
